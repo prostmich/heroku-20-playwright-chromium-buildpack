@@ -26,10 +26,9 @@ install_system_deps() {
 	local build_tmpdir=$(mktemp -d)
 	mkdir -p $build_tmpdir
 
-	SUPPORTED_BROWSERS=${PLAYWRIGHT_BUILDPACK_BROWSERS:-chromium,firefox,webkit}
-	echo "Installing Playwright dependencies (env: PLAYWRIGHT_BUILDPACK_BROWSERS) for $SUPPORTED_BROWSERS."
+	
+	echo "Installing Playwright dependencies for chromium."
 
-	if [[ "$SUPPORTED_BROWSERS" == *"chromium"* ]]; then
 		cat << EOF >>$build_tmpdir/Aptfile
 # Chromium dependencies
 libnss3
@@ -37,52 +36,18 @@ libxss1
 libasound2
 fonts-noto-color-emoji
 libgbm1
-EOF
-	fi
-
-	if [[ "$SUPPORTED_BROWSERS" == *"firefox"* ]]; then
-		cat << EOF >>$build_tmpdir/Aptfile
-# Firefox dependencies
-libdbus-glib-1-2
-libxt6
-libsm6
-libice6
-EOF
-	fi
-
-	if [[ "$SUPPORTED_BROWSERS" == *"firefox"* || "$SUPPORTED_BROWSERS" == *"chromium"* ]]; then
-		cat << EOF >>$build_tmpdir/Aptfile
-# Needed by Firefox and Chromium
 libnotify4
 libgdk-pixbuf2.0-0
 libcairo-gobject2
-# needed for CR recordings and FF video playback
+# needed for CR recordings
 ffmpeg
 libpulse0
 libusb-1.0-0
-EOF
-	fi
-
-	case "$STACK" in
-	  "heroku-18")
-	    cat << EOF >>$build_tmpdir/Aptfile
-libvpx5
-EOF
-	    ;;
-	  "heroku-20")
-	    cat << EOF >>$build_tmpdir/Aptfile
+# need heroku-20 stack
 libvpx6
-EOF
-	    ;;
-	  *)
-	    error "STACK must be 'heroku-18' or 'heroku-20'"
-	esac
-
-	cat << EOF >>$build_tmpdir/Aptfile
 # (Optional) XVFB if there's a need to run browsers in headful mode
 xvfb
 EOF
-
 	local cache_tmpdir=$(mktemp -d)
 
 	HOME=/app $buildpack_tmpdir/bin/compile $build_tmpdir $cache_tmpdir
