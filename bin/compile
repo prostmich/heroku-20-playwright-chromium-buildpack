@@ -46,7 +46,7 @@ libusb-1.0-0
 # need heroku-20 stack
 libvpx6
 # (Optional) XVFB if there's a need to run browsers in headful mode
-xvfb
+# xvfb
 EOF
 	local cache_tmpdir=$(mktemp -d)
 
