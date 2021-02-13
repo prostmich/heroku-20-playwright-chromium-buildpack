@@ -40,9 +40,9 @@ libnotify4
 libgdk-pixbuf2.0-0
 libcairo-gobject2
 # needed for CR recordings
-ffmpeg
-libpulse0
-libusb-1.0-0
+# ffmpeg
+# libpulse0
+# libusb-1.0-0
 # need heroku-20 stack
 libvpx6
 # (Optional) XVFB if there's a need to run browsers in headful mode
